@@ -5,12 +5,14 @@ import { Product } from '@/types/product';
 import { ShoppingCart, Search } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import ProductImage from './ProductImage';
+import SimpleAlert from './SimpleAlert';
 
 interface ProductListProps {
     initialProducts: Product[]; // Recebe os dados vindos do servidor
 }
 
 export default function ProductList({ initialProducts }: ProductListProps) {
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
 
     const [searchTerm, setSearchTerm] = useState("");
     const { addToCart, openCart } = useCart();
@@ -45,6 +47,7 @@ export default function ProductList({ initialProducts }: ProductListProps) {
                         <div><label className='font-bold'>Disponível:</label><span className='ml-2'>{product.availableQuantity}</span></div>
                         <button
                             onClick={() => {
+                                setAlert({ show: true, message: `${product.name} Adicionado ao Carrinho!`, type: 'success' });
                                 addToCart(product);
                                 openCart(); // 👈 abre o sidebar automaticamente
                             }}
@@ -55,6 +58,12 @@ export default function ProductList({ initialProducts }: ProductListProps) {
                     </div>
                 ))}
             </div>
+            <SimpleAlert
+                isOpen={alert.show}
+                message={alert.message}
+                type={alert.type}
+                onClose={() => setAlert({ ...alert, show: false })}
+            />
         </div>
     );
 }
