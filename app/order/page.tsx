@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 type Order = {
-    id: number;
+    id: string;
     creationDate: string;
     total: number;
     status: "Pendente" | "Enviado" | "Entregue" | "Cancelado";
