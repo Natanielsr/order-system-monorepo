@@ -15,7 +15,7 @@ export default function SimpleAlert({ message, isOpen, onClose, type = 'success'
     // Timer para fechar sozinho após 3 segundos
     useEffect(() => {
         if (isOpen) {
-            const timer = setTimeout(onClose, 5000);
+            const timer = setTimeout(onClose, 2000);
             return () => clearTimeout(timer);
         }
     }, [isOpen, onClose]);
