@@ -1,33 +1,18 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { Order } from "@/types/order";
 import { formatCurrency, formatDateBR } from "@/utils/format";
+import { getStatusName } from "@/utils/orderStatus";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-// Estendendo o tipo para incluir itens do pedido
-type OrderItem = {
-    productId: string;
-    productName: string;
-    quantity: number;
-    unitPrice: number;
-    total: number;
-};
-
-type OrderDetail = {
-    id: string;
-    creationDate: string;
-    total: number;
-    status: "Pendente" | "Enviado" | "Entregue" | "Cancelado";
-    orderProducts: OrderItem[]; // Assumindo que seu back-end retorna a lista de itens
-};
 
 export default function OrderDetailsPage() {
     const { id } = useParams();
     const router = useRouter();
     const { loading: authLoading, user } = useAuth();
 
-    const [order, setOrder] = useState<OrderDetail | null>(null);
+    const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -78,7 +63,7 @@ export default function OrderDetailsPage() {
                         <p className="text-gray-500 text-sm">{formatDateBR(order.creationDate)}</p>
                     </div>
                     <span className="px-4 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm">
-                        {order.status}
+                        {getStatusName(order.status)}
                     </span>
                 </div>
 

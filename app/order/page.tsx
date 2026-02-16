@@ -1,30 +1,11 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { Order } from "@/types/order";
 import { formatCurrency, formatDateBR } from "@/utils/format";
+import { getStatusColor, getStatusName } from "@/utils/orderStatus";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-
-type Order = {
-    id: string;
-    creationDate: string;
-    total: number;
-    status: "Pendente" | "Enviado" | "Entregue" | "Cancelado";
-};
-
-
-function getStatusColor(status: Order["status"]) {
-    switch (status) {
-        case "Entregue":
-            return "bg-green-100 text-green-700";
-        case "Enviado":
-            return "bg-blue-100 text-blue-700";
-        case "Pendente":
-            return "bg-yellow-100 text-yellow-700";
-        case "Cancelado":
-            return "bg-red-100 text-red-700";
-    }
-}
 
 export default function OrdersPage() {
 
@@ -109,7 +90,7 @@ export default function OrdersPage() {
                                 )
                                     }`}
                             >
-                                {order.status}
+                                {getStatusName(order.status)}
                             </span>
                         </div>
 
