@@ -11,7 +11,7 @@ export default function Header() {
 
     return (
         <header className="fixed top-0 left-0 w-full z-50">
-            <nav className='flex justify-between items-center h-12 px-4 shadow-md bg-gray-800 text-white'>
+            <nav className='flex justify-between items-center h-12 px-2 shadow-md bg-gray-800 text-white'>
                 <div className="z-10">
                     <MobileSidebar></MobileSidebar>
                 </div>
@@ -20,15 +20,17 @@ export default function Header() {
                         <Button>Lojinha.com</Button>
                     </Link>
                 </div>
-                <div className='hidden md:block'>
+                <div>
                     <div className='flex'>
+                        <div className='hidden md:block'>
+                            <LoginStatus></LoginStatus>
+                        </div>
 
-                        <LoginStatus></LoginStatus>
                         <Link href="/cart">
                             <button
                                 className='cursor-pointer flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors'>
                                 <ShoppingCart></ShoppingCart>
-                                <span>Carrinho</span>
+                                <span className='hidden md:block'>Carrinho</span>
                                 <span className=''>{totalItens}</span>
                             </button>
                         </Link>
