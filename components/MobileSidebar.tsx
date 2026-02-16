@@ -52,7 +52,7 @@ export default function MobileSidebar() {
                     <nav className="flex flex-col p-4 gap-4">
                         <a href="/" className="hover:text-blue-600">Home</a>
                         <a href="/cart" className="hover:text-blue-600">Carrinho</a>
-                        <a href="/orders" className="hover:text-blue-600">Pedidos</a>
+                        <a href="/order" className="hover:text-blue-600">Pedidos</a>
                         <a href="/profile" className="hover:text-blue-600">Perfil</a>
                         <a onClick={handleLogout} className="cursor-pointer hover:text-blue-600">Sair</a>
                     </nav>

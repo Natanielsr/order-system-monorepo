@@ -43,7 +43,7 @@ export default function UserDropdown({ username }: Props) {
                     </Link>
 
                     <Link
-                        href="/orders"
+                        href="/order"
                         className="block px-4 py-2 hover:bg-gray-100"
                     >
                         Meus Pedidos
