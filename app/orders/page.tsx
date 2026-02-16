@@ -3,7 +3,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { formatCurrency, formatDateBR } from "@/utils/format";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Order = {
     id: number;
@@ -34,36 +34,45 @@ export default function OrdersPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const token = localStorage.getItem("user_token");
+    // ESTADOS PARA PAGINAÇÃO
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 5;
 
-                const response = await fetch(`http://localhost:5012/api/order/getuserorders?userId=${user?.nameid}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+    const fetchOrders = useCallback(async (page: number) => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("user_token");
 
-                if (!response.ok) {
-                    console.error(response);
-                    throw new Error("Erro ao buscar pedidos");
-                }
+            const response = await fetch(`http://localhost:5012/api/order/getuserorders?userId=${user?.nameid}&page=${page}&pageSize=${pageSize}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-                const data = await response.json();
-                console.log(data);
-                setOrders(data);
-            } catch (err: any) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
+            if (!response.ok) {
+                console.error(response);
+                throw new Error("Erro ao buscar pedidos");
             }
-        };
 
-        if (!authLoading) {
-            fetchOrders();
+            const data = await response.json();
+            console.log(data);
+            setOrders(data);
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-    }, [authLoading]);
+    }, [user?.nameid]);
+
+    useEffect(() => {
+        if (!authLoading && user?.nameid) {
+            fetchOrders(currentPage);
+        }
+    }, [authLoading, user?.nameid, currentPage, fetchOrders]);
+
+    // Funções de navegação
+    const goToNextPage = () => setCurrentPage((prev) => prev + 1);
+    const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
     if (loading) {
         return <div className="p-6">Carregando pedidos...</div>;
@@ -118,6 +127,27 @@ export default function OrdersPage() {
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* CONTROLES DE PAGINAÇÃO */}
+            <div className="flex justify-between items-center mt-8">
+                <button
+                    onClick={goToPrevPage}
+                    disabled={currentPage === 1 || loading}
+                    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300 transition-colors"
+                >
+                    Anterior
+                </button>
+
+                <span className="font-medium">Página {currentPage}</span>
+
+                <button
+                    onClick={goToNextPage}
+                    disabled={orders.length < pageSize || loading}
+                    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300 transition-colors"
+                >
+                    Próxima
+                </button>
             </div>
 
             {orders.length === 0 && (
