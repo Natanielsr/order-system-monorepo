@@ -6,6 +6,7 @@ import { ShoppingCart, Search } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import ProductImage from './ProductImage';
 import SimpleAlert from './SimpleAlert';
+import { formatCurrency } from '@/utils/format';
 
 interface ProductListProps {
     initialProducts: Product[]; // Recebe os dados vindos do servidor
@@ -43,7 +44,7 @@ export default function ProductList({ initialProducts }: ProductListProps) {
                             <ProductImage product={product} width={200} height={200}></ProductImage>
                         </div>
                         <h3 className="font-bold text-gray-800">{product.name}</h3>
-                        <p className="text-blue-600 font-bold">R$ {product.price.toFixed(2)}</p>
+                        <p className="text-blue-600 font-bold">{formatCurrency(product.price)}</p>
                         <div><label className='font-bold'>Disponível:</label><span className='ml-2'>{product.availableQuantity}</span></div>
                         <button
                             onClick={() => {
