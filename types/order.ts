@@ -6,6 +6,7 @@ export type Order = {
     creationDate: string;
     total: number;
     status: number;
-    orderProducts: OrderItem[]
-    paymentInfo: PaymentInfo[]
+    orderProducts: OrderItem[];
+    paymentInfo: PaymentInfo[];
+    code: string;
 };

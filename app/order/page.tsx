@@ -77,7 +77,7 @@ export default function OrdersPage() {
                         <div className="flex justify-between items-center mb-3">
                             <div>
                                 <p className="text-sm text-gray-500">
-                                    Pedido #{order.id}
+                                    Pedido #{order.code}
                                 </p>
                                 <p className="text-sm text-gray-500">
                                     Data: {formatDateBR(order.creationDate)}

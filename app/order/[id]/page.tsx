@@ -63,7 +63,7 @@ export default function OrderDetailsPage() {
                 <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border p-6">
                     <div className="flex justify-between items-start border-b pb-4 mb-6">
                         <div>
-                            <h1 className="text-xl font-bold">Pedido #{order.id}</h1>
+                            <h1 className="text-xl font-bold">Pedido #{order.code}</h1>
                             <p className="text-gray-500 text-sm">{formatDateBR(order.creationDate)}</p>
                         </div>
                         <span className="px-4 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm">
