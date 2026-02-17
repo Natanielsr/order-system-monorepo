@@ -146,9 +146,6 @@ export default function CheckoutPage() {
                             <div className="flex-1">
                                 <div className="flex justify-between items-start">
                                     <h3 className="text-lg font-bold">Método de pagamento</h3>
-                                    <Link href="/payment/change">
-                                        <button className="cursor-pointer text-blue-600 hover:text-orange-600 text-sm">Alterar</button>
-                                    </Link>
                                 </div>
                                 <div className="mt-2 flex items-center gap-2">
                                     <PaymentSelector value={selectedPayment} onChange={setSelectedPayment}></PaymentSelector>
