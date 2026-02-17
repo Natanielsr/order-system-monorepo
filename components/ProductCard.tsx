@@ -3,8 +3,8 @@
 
 import Image from 'next/image';
 import CartIcon from './CartIcon';
-import { Product } from '@/types/cart';
 import { formatCurrency } from '@/utils/format';
+import { Product } from '@/types/product';
 
 interface ProductCardProps {
     product: Product;
@@ -16,7 +16,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         <div className="max-w-sm rounded-2xl overflow-hidden shadow bg-gray-300 p-2 border border-gray-200">
             <div className="relative aspect-square w-full mb-1 bg-white rounded-md overflow-hidden shadow">
                 <Image
-                    src={product.image}
+                    src={product.imagePath}
                     alt={product.name}
                     fill
                     className="object-contain rounded-md shadow"
