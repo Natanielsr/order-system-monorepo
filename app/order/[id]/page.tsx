@@ -1,5 +1,6 @@
 "use client";
 
+import PaymentResume from "@/components/PaymentResume";
 import { useAuth } from "@/context/AuthContext";
 import { Order } from "@/types/order";
 import { formatCurrency, formatDateBR } from "@/utils/format";
@@ -56,47 +57,66 @@ export default function OrderDetailsPage() {
                 ← Voltar para Meus Pedidos
             </button>
 
-            <div className="bg-white rounded-2xl shadow-sm border p-6">
-                <div className="flex justify-between items-start border-b pb-4 mb-6">
-                    <div>
-                        <h1 className="text-xl font-bold">Pedido #{order.id}</h1>
-                        <p className="text-gray-500 text-sm">{formatDateBR(order.creationDate)}</p>
-                    </div>
-                    <span className="px-4 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm">
-                        {getStatusName(order.status)}
-                    </span>
-                </div>
-
-                {/* Lista de Produtos */}
-                <div className="space-y-4 mb-8">
-                    <h2 className="font-semibold text-gray-700">Itens do Pedido</h2>
-                    {order.orderProducts?.map((item) => (
-                        <div key={item.productId} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
-                            <div>
-                                <p className="font-medium">{item.productName}</p>
-                                <p className="text-sm text-gray-500">{item.quantity}x {formatCurrency(item.unitPrice)}</p>
-                            </div>
-                            <p className="font-semibold">{formatCurrency(item.total)}</p>
+            {/* Container do Grid Responsivo */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                {/* COLUNA DA ESQUERDA: Detalhes dos Itens (Ocupa 2 colunas no desktop) */}
+                <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border p-6">
+                    <div className="flex justify-between items-start border-b pb-4 mb-6">
+                        <div>
+                            <h1 className="text-xl font-bold">Pedido #{order.id}</h1>
+                            <p className="text-gray-500 text-sm">{formatDateBR(order.creationDate)}</p>
                         </div>
-                    ))}
-                </div>
+                        <span className="px-4 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm">
+                            {getStatusName(order.status)}
+                        </span>
+                    </div>
 
-                {/* Resumo de Valores */}
-                <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-                    <div className="flex justify-between text-gray-600">
-                        <span>Subtotal</span>
-                        <span>{formatCurrency(order.total)}</span>
+                    {/* Lista de Produtos */}
+                    <div className="space-y-4 mb-8">
+                        <h2 className="font-semibold text-gray-700">Itens do Pedido</h2>
+                        {order.orderProducts?.map((item) => (
+                            <div key={item.productId} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
+                                <div>
+                                    <p className="font-medium">{item.productName}</p>
+                                    <p className="text-sm text-gray-500">{item.quantity}x {formatCurrency(item.unitPrice)}</p>
+                                </div>
+                                <p className="font-semibold">{formatCurrency(item.total)}</p>
+                            </div>
+                        ))}
                     </div>
-                    <div className="flex justify-between text-gray-600">
-                        <span>Frete</span>
-                        <span className="text-green-600">Grátis</span>
-                    </div>
-                    <div className="flex justify-between text-lg font-bold pt-2 border-t mt-2">
-                        <span>Total</span>
-                        <span>{formatCurrency(order.total)}</span>
+
+                    {/* Resumo de Valores */}
+                    <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+                        <div className="flex justify-between text-gray-600">
+                            <span>Subtotal</span>
+                            <span>{formatCurrency(order.total)}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-600">
+                            <span>Frete</span>
+                            <span className="text-green-600">Grátis</span>
+                        </div>
+                        <div className="flex justify-between text-lg font-bold pt-2 border-t mt-2">
+                            <span>Total</span>
+                            <span>{formatCurrency(order.total)}</span>
+                        </div>
                     </div>
                 </div>
+                {/* COLUNA DA DIREITA: Informações de Pagamento (Ocupa 1 coluna no desktop) */}
+                <aside className="lg:col-span-1 space-y-4 sticky top-6">
+
+                    {order.paymentInfo.map((i) =>
+                        <div key={i.id}><PaymentResume info={i}></PaymentResume></div>
+
+                    )}
+
+                    {/* Dica de Segurança ou Ajuda (Opcional) */}
+                    <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                        <p className="text-xs text-blue-700 leading-relaxed">
+                            Se houver qualquer problema com o pagamento, entre em contato com nosso suporte.
+                        </p>
+                    </div>
+                </aside>
             </div>
-        </div>
+        </div >
     );
 }
