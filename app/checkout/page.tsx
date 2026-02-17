@@ -9,6 +9,7 @@ import ProductImage from '@/components/ProductImage';
 import SimpleAlert from '@/components/SimpleAlert';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import PaymentSelector from '@/components/PaymentSelector';
 
 export default function CheckoutPage() {
     const { cart, total, totalItens, closeCart, clearCart } = useCart();
@@ -16,6 +17,7 @@ export default function CheckoutPage() {
     const { user, isAuthenticated, loading } = useAuth();
     const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
     const router = useRouter();
+    const [selectedPayment, setSelectedPayment] = useState(0);
 
     const showErrorAlert = (message: string) => {
         setAlert({ show: true, message: message, type: 'error' });
@@ -34,21 +36,19 @@ export default function CheckoutPage() {
 
     }, [loading, isAuthenticated, router]);
 
-    cart.map(i => i.id);
-
-    // Dados fictícios que viriam do seu contexto de carrinho/auth
-    const orderData = {
-        userId: user?.nameid,
-        orderProducts: cart.map(item => ({
-            productId: item.id,
-            quantity: item.quantity
-        }))
-    };
-
     async function handleConfirmOrder() {
         setIsPending(true);
 
         var token = localStorage.getItem('user_token');
+
+        const orderData = {
+            userId: user?.nameid,
+            orderProducts: cart.map(item => ({
+                productId: item.id,
+                quantity: item.quantity
+            })),
+            paymentMethod: selectedPayment
+        };
 
         try {
             const response = await fetch('http://localhost:5012/api/order', {
@@ -151,8 +151,7 @@ export default function CheckoutPage() {
                                     </Link>
                                 </div>
                                 <div className="mt-2 flex items-center gap-2">
-                                    <div className="w-10 h-6 bg-gray-100 border rounded flex items-center justify-center text-[10px] font-bold">VISA</div>
-                                    <span className="text-sm text-gray-700">Cartão terminado em 4242</span>
+                                    <PaymentSelector value={selectedPayment} onChange={setSelectedPayment}></PaymentSelector>
                                 </div>
                             </div>
                         </div>
