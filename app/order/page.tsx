@@ -5,15 +5,17 @@ import { Order } from "@/types/order";
 import { formatCurrency, formatDateBR } from "@/utils/format";
 import { getStatusColor, getStatusName } from "@/utils/orderStatus";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 export default function OrdersPage() {
 
-    const { loading: authLoading, user } = useAuth();
+    const { loading: authLoading, user, isAuthenticated } = useAuth();
 
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const router = useRouter();
 
     // ESTADOS PARA PAGINAÇÃO
     const [currentPage, setCurrentPage] = useState(1);
@@ -46,9 +48,16 @@ export default function OrdersPage() {
     }, [user?.nameid]);
 
     useEffect(() => {
+        if (!isAuthenticated) {
+            router.push("/login");
+            return;
+        }
+
         if (!authLoading && user?.nameid) {
             fetchOrders(currentPage);
         }
+
+
     }, [authLoading, user?.nameid, currentPage, fetchOrders]);
 
     // Funções de navegação
