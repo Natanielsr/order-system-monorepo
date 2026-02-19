@@ -7,9 +7,10 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ProductImage from '@/components/ProductImage';
 import SimpleAlert from '@/components/SimpleAlert';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import PaymentSelector from '@/components/PaymentSelector';
+import Spinner from '@/components/Spinner';
 
 export default function CheckoutPage() {
     const { cart, total, totalItens, closeCart, clearCart } = useCart();
@@ -17,6 +18,7 @@ export default function CheckoutPage() {
     const { user, isAuthenticated, loading } = useAuth();
     const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
     const router = useRouter();
+    const pathname = usePathname(); // Hook para pegar a URL atual
     const [selectedPayment, setSelectedPayment] = useState(0);
 
     const showErrorAlert = (message: string) => {
@@ -87,6 +89,10 @@ export default function CheckoutPage() {
         } finally {
             setIsPending(false);
         }
+    }
+
+    if (loading || (!isAuthenticated && pathname !== '/login')) {
+        return <Spinner />; // Ou apenas return null;
     }
 
 
