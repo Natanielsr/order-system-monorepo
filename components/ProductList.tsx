@@ -45,7 +45,10 @@ export default function ProductList({ initialProducts }: ProductListProps) {
                         </div>
                         <h3 className="font-bold text-gray-800">{product.name}</h3>
                         <p className="text-blue-600 font-bold">{formatCurrency(product.price)}</p>
-                        <div><label className='font-bold'>Disponível:</label><span className='ml-2'>{product.availableQuantity}</span></div>
+                        <div>
+                            <label className='font-bold'>Disponível:</label>
+                            <span className='ml-2'>{product.availableQuantity}</span>
+                        </div>
                         <button
                             onClick={() => {
                                 setAlert({ show: true, message: `${product.name} Adicionado ao Carrinho!`, type: 'success' });
