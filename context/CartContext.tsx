@@ -10,6 +10,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [totalItens, setTotalItens] = useState<number>(0);
     const [isOpen, setIsOpen] = useState(false);
+    const [loadingCart, setLoadingCart] = useState(true);
 
     const openCart = () => setIsOpen(true);
     const closeCart = () => setIsOpen(false);
@@ -35,6 +36,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
         const total = cart.reduce((acc, item) => acc + item.quantity, 0);
         setTotalItens(total);
+        setLoadingCart(false);
     }, [cart]);
 
     const addToCart = (product: Product) => {
@@ -49,6 +51,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             return [...prev, { ...product, quantity: 1 }];
         });
         setTotalItens(totalItens + 1);
+        setLoadingCart(false);
     };
 
     const removeFromCart = (id: string) => {
@@ -58,6 +61,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
         setCart((prev) => prev.filter((item) => item.id !== id));
 
+        setLoadingCart(false);
     };
 
     const increaseItem = (id: string) => {
@@ -91,7 +95,20 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, total, totalItens, increaseItem, decreaseItem, isOpen, openCart, closeCart, clearCart }}>
+        <CartContext.Provider value={{
+            cart,
+            addToCart,
+            removeFromCart,
+            total,
+            totalItens,
+            increaseItem,
+            decreaseItem,
+            isOpen,
+            openCart,
+            closeCart,
+            clearCart,
+            loadingCart
+        }}>
             {children}
         </CartContext.Provider>
     );
