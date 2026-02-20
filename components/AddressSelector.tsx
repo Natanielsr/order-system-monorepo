@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { API_CONFIG } from '@/app/config/api';
+import { API_CONFIG } from '@/config/api';
 import { useAuth } from '@/context/AuthContext';
 import { Address } from '@/types/address';
 
@@ -15,6 +15,7 @@ export default function AddressSelector({ onSelect }: AddressSelectorProps) {
     const [page, setPage] = useState(1);
     const { user, getToken } = useAuth();
     const pageSize = 5;
+
 
     const fetchAddresses = async () => {
         setLoading(true);
