@@ -10,6 +10,7 @@ type AuthContextType = {
     loading: boolean;
     login: (token: string) => void;
     logout: () => void;
+    getToken: () => string;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -56,6 +57,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
     };
 
+    const getToken = (): string => {
+        var token = localStorage.getItem(TOKEN_KEY);
+        return token ? token : "";
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -64,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 loading,
                 login,
                 logout,
+                getToken
             }}
         >
             {children}
