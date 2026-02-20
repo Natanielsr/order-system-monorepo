@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function OrdersPage() {
 
-    const { loading: authLoading, user, isAuthenticated } = useAuth();
+    const { loading: authLoading, user, isAuthenticated, getToken } = useAuth();
 
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ export default function OrdersPage() {
     const fetchOrders = useCallback(async (page: number) => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("user_token");
+            const token = getToken();
 
             const response = await fetch(`http://localhost:5012/api/order/getuserorders?userId=${user?.nameid}&page=${page}&pageSize=${pageSize}`, {
                 headers: {
