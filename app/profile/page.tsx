@@ -172,7 +172,7 @@ export default function UserProfile() {
                         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                             <MapPin size={20} className="text-blue-600" /> Meus Endereços
                         </h2>
-                        <button onClick={() => { router.push("/login"); }} className="cursor-pointer text-sm font-semibold text-blue-600 hover:underline">
+                        <button onClick={() => { router.push("/address/new"); }} className="cursor-pointer text-sm font-semibold text-blue-600 hover:underline">
                             + Adicionar novo
                         </button>
                     </div>
