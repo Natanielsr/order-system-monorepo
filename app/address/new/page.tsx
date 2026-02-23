@@ -9,8 +9,8 @@ import SimpleAlert from '@/components/SimpleAlert';
 
 export default function AddressPage() {
     const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    const { user, isAuthenticated, getToken } = useAuth();
+    const [loadingAddress, setLoadingAddress] = useState(false);
+    const { user, isAuthenticated, getToken, loading } = useAuth();
     const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
 
     const ESTADOS_BRASIL = [
@@ -42,12 +42,12 @@ export default function AddressPage() {
     });
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated && !loading) {
             router.push("/login");
             return;
         }
 
-    }, []);
+    }, [isAuthenticated, loading, router]);
 
     // Handler para inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -66,7 +66,7 @@ export default function AddressPage() {
     // Envio para a API
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
+        setLoadingAddress(true);
 
         var token = getToken();
 
@@ -82,7 +82,7 @@ export default function AddressPage() {
             var responseStr = await response.text();
             if (!response.ok) throw new Error(responseStr);
             setAlert({ show: true, message: 'Endereço adicionado com sucesso!', type: 'success' });
-            router.push('/enderecos'); // Redireciona após sucesso
+            router.back(); // Redireciona após sucesso
         } catch (error: any) {
             console.error("failed to create address");
             console.error(error.message);
@@ -91,7 +91,7 @@ export default function AddressPage() {
 
             setAlert({ show: true, message: errorsStr, type: 'error' });
         } finally {
-            setLoading(false);
+            setLoadingAddress(false);
         }
     };
 
@@ -105,7 +105,7 @@ export default function AddressPage() {
 
             <main className="max-w-xl mx-auto px-4">
                 <button onClick={() => router.back()} className="flex items-center text-sm text-blue-600 hover:text-orange-700 hover:underline mb-6">
-                    <ChevronLeft className="w-4 h-4" /> Voltar para seus endereços
+                    <ChevronLeft className="w-4 h-4" /> Voltar
                 </button>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
