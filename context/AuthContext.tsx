@@ -28,6 +28,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setLoading(false);
             return;
         }
+        setLoading(true);
+
 
         try {
             const decoded = jwtDecode<UserClaims>(token);
