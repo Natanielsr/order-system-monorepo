@@ -6,10 +6,13 @@ import { useRouter } from 'next/navigation';
 import { API_CONFIG } from '@/config/api';
 import { useAuth } from '@/context/AuthContext';
 import SimpleAlert from '@/components/SimpleAlert';
+import { maskCEP, maskCPF } from '@/utils/mask';
+import Spinner from '@/components/Spinner';
 
 export default function AddressPage() {
     const router = useRouter();
     const [loadingAddress, setLoadingAddress] = useState(false);
+    const [searchingZipCode, setSearchingZipCode] = useState(false);
     const { user, isAuthenticated, getToken, loading } = useAuth();
     const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
 
@@ -52,22 +55,69 @@ export default function AddressPage() {
     // Handler para inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
+        let displayValue = value;
+
+        // Aplicando Máscaras
+        if (name === 'cpf') {
+            displayValue = maskCPF(value);
+        } else if (name === 'zipCode') {
+            displayValue = maskCEP(value);
+            checkCEP(value);
+        }
 
         const checked = (e.target as HTMLInputElement).checked;
 
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+        if (type === 'checkbox') {
+            const checked = (e.target as HTMLInputElement).checked;
+            setFormData(prev => ({ ...prev, [name]: checked }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: displayValue }));
+        }
     };
 
-
+    const checkCEP = async (cep: string) => {
+        const cleanCEP = cep.replace(/\D/g, "");
+        if (cleanCEP.length === 8) {
+            console.log("buscando cep...");
+            setSearchingZipCode(true);
+            try {
+                const res = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
+                const data = await res.json();
+                if (!data.erro) {
+                    setFormData(prev => ({
+                        ...prev,
+                        street: data.logradouro,
+                        neighborhood: data.bairro,
+                        city: data.localidade,
+                        state: data.uf
+                    }));
+                }
+                setSearchingZipCode(false);
+            } catch (err) {
+                console.error("Erro ao buscar CEP");
+                setSearchingZipCode(false);
+            }
+        }
+    };
 
     // Envio para a API
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoadingAddress(true);
 
+        // Validação de CPF
+        if (formData.cpf.replace(/\D/g, "").length !== 11) {
+            setAlert({ show: true, message: 'CPF inválido. Insira os 11 dígitos.', type: 'error' });
+            return;
+        }
+
+        // Validação de CEP
+        if (formData.zipCode.replace(/\D/g, "").length !== 8) {
+            setAlert({ show: true, message: 'CEP incompleto.', type: 'error' });
+            return;
+        }
+
+
+        setLoadingAddress(true);
         var token = getToken();
 
         try {
@@ -94,6 +144,7 @@ export default function AddressPage() {
             setLoadingAddress(false);
         }
     };
+
 
     return (
         <div className="min-h-screen bg-white text-gray-900 pb-12">
@@ -137,15 +188,24 @@ export default function AddressPage() {
                     {/* CEP */}
                     <div>
                         <label className="block text-sm font-bold mb-1">CEP</label>
-                        <input
-                            required
-                            name="zipCode"
-                            value={formData.zipCode}
-                            onChange={handleChange}
-                            type="text"
-                            placeholder="00000-000"
-                            className="w-full md:w-1/2 p-2 border border-gray-400 rounded-md focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none"
-                        />
+                        <div className='flex'>
+                            <input
+                                required
+                                name="zipCode"
+                                value={formData.zipCode}
+                                onChange={handleChange}
+                                type="text"
+                                placeholder="00000-000"
+                                className="w-full md:w-1/2 p-2 border border-gray-400 rounded-md focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none"
+                            />
+                            {searchingZipCode && (
+                                <div className='m-1'>
+                                    <Spinner></Spinner>
+                                </div>
+                            )}
+
+                        </div>
+
                     </div>
 
                     {/* Endereço */}
