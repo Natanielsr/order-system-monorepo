@@ -140,18 +140,6 @@ export default function UserProfile() {
                                 onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
                             />
                         </div>
-
-                        {/* Campo: Bio (Full Width) */}
-                        <div className="md:col-span-2 space-y-2">
-                            <label className="text-sm font-semibold text-gray-600">Bio</label>
-                            <textarea
-                                disabled={!isEditing}
-                                rows={3}
-                                className="w-full p-2.5 border rounded-lg bg-white disabled:bg-gray-50 disabled:text-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
-                                value={userData.bio}
-                                onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
-                            />
-                        </div>
                     </div>
 
                     {/* Botão Salvar (Apenas no modo edição) */}
