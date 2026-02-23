@@ -29,7 +29,9 @@ export default function AddressCard({ address }: AddressCardProps) {
                 </button>
             </div>
         </div>
-        <p className="mt-3 text-sm font-medium text-gray-800">{address.street}, {address.number}</p>
+        <p className="mt-3 text-sm font-bold text-gray-800">{address.fullName}</p>
+        <p className="text-sm font-medium text-gray-800">CPF: {address.cpf}</p>
+        <p className="text-sm font-medium text-gray-800">{address.street}, {address.number}</p>
         <p className="text-sm text-gray-500 text-sm">{address.neighborhood} — {address.city}, {address.state}</p>
         <p className="text-xs text-gray-400 mt-1">CEP: {address.zipCode}</p>
     </div>;
