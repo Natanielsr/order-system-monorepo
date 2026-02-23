@@ -216,12 +216,6 @@ export default function AddressPage() {
                         </div>
                     </div>
 
-                    {/* Telefone */}
-                    <div>
-                        <label className="block text-sm font-bold mb-1">Número de telefone</label>
-                        <input required name="phone" value={formData.phone} onChange={handleChange} type="text" className="w-full p-2 border border-gray-400 rounded-md focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none" />
-                    </div>
-
                     {/* Checkbox Padrão */}
                     <div className="flex items-center gap-2 pt-2">
                         <input
