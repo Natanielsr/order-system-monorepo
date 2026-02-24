@@ -8,10 +8,11 @@ import SimpleAlert from "./SimpleAlert";
 import { useAuth } from "@/context/AuthContext";
 
 interface AddressCardProps {
-    address: Address
+    address: Address;
+    onDelete: () => void;
 }
 
-export default function AddressCard({ address }: AddressCardProps) {
+export default function AddressCard({ address, onDelete }: AddressCardProps) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -41,6 +42,7 @@ export default function AddressCard({ address }: AddressCardProps) {
             if (!response.ok) throw new Error("Erro ao excluir");
 
             setAlert({ show: true, message: "Endereço excluído com sucesso!", type: 'success' });
+            onDelete();
             // Atualize sua lista local aqui ou redirecione
         } catch (error) {
             setAlert({ show: true, message: "Falha ao excluir endereço", type: 'error' });
