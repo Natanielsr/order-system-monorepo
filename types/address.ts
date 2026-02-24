@@ -4,10 +4,12 @@ export type Address = {
     cpf: string;
     street: string;
     neighborhood: string
+    complement: string;
     number: string;
     city: string;
     state: string;
     zipCode: string;
-    default: boolean
+    isDefault: boolean;
+    userId: string;
 
 }
