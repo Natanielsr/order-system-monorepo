@@ -7,10 +7,11 @@ import { API_CONFIG } from '@/config/api';
 import { Address } from '@/types/address';
 import AddressCard from '@/components/AddressCard';
 import { useRouter } from 'next/navigation';
+import Spinner from '@/components/Spinner';
 
 export default function UserProfile() {
     const [isEditing, setIsEditing] = useState(false);
-    const { user, getToken, loading } = useAuth();
+    const { user, getToken, loading, isAuthenticated } = useAuth();
     const [addresses, setAddresses] = useState<Address[]>([]);
     const router = useRouter();
     const page = 1;
@@ -55,6 +56,12 @@ export default function UserProfile() {
     };
 
     useEffect(() => {
+        if (!isAuthenticated && !loading) {
+            router.push("/login");
+
+            return;
+        }
+
         if (user) {
             setUserData(prev => ({
                 ...prev,
@@ -67,6 +74,10 @@ export default function UserProfile() {
         if (loading == false)
             fetchAddresses();
     }, [loading, user]);
+
+    if (!isAuthenticated) {
+        return <div><Spinner></Spinner></div>
+    }
 
     return (
         <div className="max-w-4xl mx-auto p-6">
