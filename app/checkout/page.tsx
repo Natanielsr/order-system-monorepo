@@ -146,7 +146,7 @@ export default function CheckoutPage() {
                                 <div className="flex-1">
                                     <div className="flex justify-between items-start">
                                         <h3 className="text-lg font-bold">Endereço de envio</h3>
-                                        <Link href="/address/new">
+                                        <Link href="/address">
                                             <button className="cursor-pointer text-blue-600 hover:text-orange-600 text-sm">Alterar</button>
                                         </Link>
                                     </div>
