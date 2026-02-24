@@ -75,6 +75,10 @@ export default function UserProfile() {
             fetchAddresses();
     }, [loading, user]);
 
+    const handleDeleteAddress = () => {
+        fetchAddresses();
+    }
+
     if (!isAuthenticated) {
         return <div><Spinner></Spinner></div>
     }
@@ -179,7 +183,7 @@ export default function UserProfile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Card de Endereço */}
                         {addresses?.map((a) => (
-                            <AddressCard key={a.id} address={a}></AddressCard>
+                            <AddressCard key={a.id} address={a} onDelete={handleDeleteAddress}></AddressCard>
                         ))}
                     </div>
                 </div>
