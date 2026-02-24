@@ -9,6 +9,7 @@ import SimpleAlert from '@/components/SimpleAlert';
 import { maskCEP, maskCPF } from '@/utils/mask';
 import Spinner from '@/components/Spinner';
 import { Address } from '@/types/address';
+import { validateCpf } from '@/utils/validation';
 
 export default function AddressPage() {
     const router = useRouter();
@@ -126,9 +127,13 @@ export default function AddressPage() {
         e.preventDefault();
 
         // Validação de CPF
-        if (formData.cpf.replace(/\D/g, "").length !== 11) {
-            setAlert({ show: true, message: 'CPF inválido. Insira os 11 dígitos.', type: 'error' });
-            return;
+        if (!validateCpf(formData.cpf)) {
+            setAlert({
+                show: true,
+                message: "CPF inválido. Verifique os números.",
+                type: 'error'
+            });
+            return; // Interrompe o envio
         }
 
         // Validação de CEP
