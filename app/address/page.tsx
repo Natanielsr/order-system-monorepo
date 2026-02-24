@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { ChevronLeft, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { API_CONFIG } from '@/config/api';
 import { useAuth } from '@/context/AuthContext';
 import SimpleAlert from '@/components/SimpleAlert';
 import { maskCEP, maskCPF } from '@/utils/mask';
 import Spinner from '@/components/Spinner';
+import { Address } from '@/types/address';
 
 export default function AddressPage() {
     const router = useRouter();
@@ -15,6 +16,8 @@ export default function AddressPage() {
     const [searchingZipCode, setSearchingZipCode] = useState(false);
     const { user, isAuthenticated, getToken, loading } = useAuth();
     const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
+    const searchParams = useSearchParams();
+    const addressId = searchParams.get('id');
 
     const ESTADOS_BRASIL = [
         { uf: 'AC', nome: 'Acre' }, { uf: 'AL', nome: 'Alagoas' }, { uf: 'AP', nome: 'Amapá' },
@@ -29,7 +32,8 @@ export default function AddressPage() {
     ];
 
     // Estado do formulário
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<Address>({
+        id: '',
         fullName: '',
         cpf: '',
         zipCode: '',
@@ -39,9 +43,8 @@ export default function AddressPage() {
         complement: '',
         city: '',
         state: '',
-        phone: '',
         isDefault: false,
-        userId: user?.nameid
+        userId: ''
     });
 
     useEffect(() => {
@@ -50,7 +53,24 @@ export default function AddressPage() {
             return;
         }
 
-    }, [isAuthenticated, loading, router]);
+        if (user?.nameid) {
+            setFormData(prev => ({
+                ...prev,
+                userId: user.nameid
+            }));
+        }
+
+        if (addressId) {
+
+            setFormData(prev => ({
+                ...prev,
+                id: addressId
+            }));
+
+            handleGetAddress();
+        }
+
+    }, [isAuthenticated, loading, router, user, addressId ? addressId : null]);
 
     // Handler para inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -120,9 +140,15 @@ export default function AddressPage() {
         setLoadingAddress(true);
         var token = getToken();
 
+        var method = "";
+        if (addressId)
+            method = "PUT";
+        else
+            method = "POST";
+
         try {
             const response = await fetch(`${API_CONFIG.BASE_URL}/address`, {
-                method: 'POST',
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
@@ -135,6 +161,36 @@ export default function AddressPage() {
             router.back(); // Redireciona após sucesso
         } catch (error: any) {
             console.error("failed to create address");
+            console.error(error.message);
+            var errorJson = JSON.parse(error.message);
+            var errorsStr = errorJson.errors.map((e: string) => e);
+
+            setAlert({ show: true, message: errorsStr, type: 'error' });
+        } finally {
+            setLoadingAddress(false);
+        }
+    };
+
+    const handleGetAddress = async () => {
+        try {
+            var token = getToken();
+
+            const response = await fetch(`${API_CONFIG.BASE_URL}/address/${addressId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            var data = await response.json();
+            if (!response.ok) throw new Error(data);
+
+            setFormData(data);
+
+            console.log(data);
+
+        } catch (error: any) {
+            console.error("failed to get address");
             console.error(error.message);
             var errorJson = JSON.parse(error.message);
             var errorsStr = errorJson.errors.map((e: string) => e);
@@ -282,7 +338,7 @@ export default function AddressPage() {
                             type="checkbox"
                             id="default"
                             name="isDefault"
-                            checked={formData.isDefault}
+                            checked={formData.isDefault ?? false}
                             onChange={handleChange}
                             className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                         />
@@ -297,7 +353,7 @@ export default function AddressPage() {
                             className="w-full md:w-auto bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] rounded-lg py-2 px-10 text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-2"
                         >
                             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                            {loading ? 'Salvando...' : 'Adicionar endereço'}
+                            {loading ? 'Salvando...' : 'Salvar endereço'}
                         </button>
                     </div>
                 </form>
