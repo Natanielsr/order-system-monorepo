@@ -18,6 +18,7 @@ export default function AddressPage() {
     const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
     const searchParams = useSearchParams();
     const addressId = searchParams.get('id');
+    const [error, setError] = useState(false);
 
     const ESTADOS_BRASIL = [
         { uf: 'AC', nome: 'Acre' }, { uf: 'AL', nome: 'Alagoas' }, { uf: 'AP', nome: 'Amapá' },
@@ -182,20 +183,28 @@ export default function AddressPage() {
                     Authorization: `Bearer ${token}`,
                 }
             });
+
+            if (!response.ok) {
+                // Tenta pegar o texto do erro, caso não seja JSON
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
             var data = await response.json();
-            if (!response.ok) throw new Error(data);
-
             setFormData(data);
-
             console.log(data);
 
         } catch (error: any) {
             console.error("failed to get address");
-            console.error(error.message);
-            var errorJson = JSON.parse(error.message);
-            var errorsStr = errorJson.errors.map((e: string) => e);
-
-            setAlert({ show: true, message: errorsStr, type: 'error' });
+            try {
+                // 2. Tenta parsear o erro apenas se ele parecer um JSON
+                const errorJson = JSON.parse(error.message);
+                const errorsStr = errorJson.errors ? errorJson.errors.join(", ") : "Erro desconhecido";
+                setAlert({ show: true, message: errorsStr, type: 'error' });
+            } catch {
+                // 3. Se o erro não for JSON (ex: string simples ou HTML), cai aqui
+                setAlert({ show: true, message: error.message || "Erro ao carregar endereço", type: 'error' });
+            }
+            setError(true);
         } finally {
             setLoadingAddress(false);
         }
@@ -206,7 +215,10 @@ export default function AddressPage() {
         <div className="min-h-screen bg-white text-gray-900 pb-12">
             <header className="border-b border-gray-200 py-4 mb-8">
                 <div className="max-w-3xl mx-auto px-4">
-                    <h1 className="text-2xl font-semibold">Adicionar um novo endereço</h1>
+                    <h1 className="text-2xl font-semibold">
+                        {addressId ? "Alterar Endereço" : "Adicionar um novo endereço"}
+
+                    </h1>
                 </div>
             </header>
 
@@ -349,7 +361,7 @@ export default function AddressPage() {
                     <div className="pt-4">
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || error || loadingAddress}
                             className="w-full md:w-auto bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] rounded-lg py-2 px-10 text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-2"
                         >
                             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
