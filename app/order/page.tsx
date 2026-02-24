@@ -33,8 +33,8 @@ export default function OrdersPage() {
             });
 
             if (!response.ok) {
-                console.error(response);
-                throw new Error("Erro ao buscar pedidos");
+                console.error(`Error ${response.status}: ${response.statusText}`);
+                throw new Error("Error fetch Orders");
             }
 
             const data = await response.json();
