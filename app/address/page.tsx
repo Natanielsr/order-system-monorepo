@@ -45,7 +45,7 @@ export default function AddressPage() {
         complement: '',
         city: '',
         state: '',
-        isDefault: false,
+        isDefault: true,
         userId: ''
     });
 
@@ -169,7 +169,13 @@ export default function AddressPage() {
             console.error("failed to create address");
             console.error(error.message);
             var errorJson = JSON.parse(error.message);
-            var errorsStr = errorJson.errors.map((e: string) => e);
+            var errorsStr = "";
+            try {
+                errorsStr = errorJson.errors.map((e: string) => e);
+            }
+            catch (e) {
+                errorsStr = "Não foi possível Salvar o endereço";
+            }
 
             setAlert({ show: true, message: errorsStr, type: 'error' });
         } finally {
