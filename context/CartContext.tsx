@@ -29,6 +29,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         // Evita salvar um carrinho vazio por cima dos dados reais no primeiro render
         if (cart.length > 0) {
             localStorage.setItem("@MeuApp:carrinho", JSON.stringify(cart));
+
         } else if (cart.length === 0) {
             // Se o carrinho foi limpo propositalmente, remove do storage
             localStorage.removeItem("@MeuApp:carrinho");
@@ -36,6 +37,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
         const total = cart.reduce((acc, item) => acc + item.quantity, 0);
         setTotalItens(total);
+
         setLoadingCart(false);
     }, [cart]);
 
