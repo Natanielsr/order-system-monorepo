@@ -15,6 +15,7 @@ export default function AddressSelector({ onSelect }: AddressSelectorProps) {
     const [page, setPage] = useState(1);
     const { user, getToken } = useAuth();
     const pageSize = 5;
+    const [selectValue, setSelectValue] = useState("");
 
 
     const fetchAddresses = async () => {
@@ -34,6 +35,14 @@ export default function AddressSelector({ onSelect }: AddressSelectorProps) {
             const data = await response.json();
             console.log(data);
             setAddresses(data);
+
+            const defaultAddress = data.find((addr: Address) => addr.isDefault);
+
+            if (defaultAddress) {
+                setSelectValue(defaultAddress.id);
+                onSelect(defaultAddress); // Notifica o pai sobre o valor inicial
+            }
+
         } catch (error) {
             console.error("Erro ao buscar endereços:", error);
         } finally {
@@ -43,11 +52,12 @@ export default function AddressSelector({ onSelect }: AddressSelectorProps) {
 
     useEffect(() => {
         fetchAddresses();
-    }, [page]);
+    }, [page, user?.nameid]);
 
     // Função para lidar com a mudança de seleção
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedId = e.target.value;
+        setSelectValue(selectedId);
         // Encontramos o objeto completo dentro do nosso array local
         const selectedAddress = addresses.find(addr => addr.id === selectedId);
 
@@ -65,7 +75,7 @@ export default function AddressSelector({ onSelect }: AddressSelectorProps) {
             <select
                 required
                 id="address-select"
-                defaultValue=""
+                value={selectValue}
                 disabled={loading}
                 onChange={handleChange}
                 className="block w-full p-2.5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 italic"
