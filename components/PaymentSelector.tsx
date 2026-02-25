@@ -21,6 +21,7 @@ const PaymentSelector = ({ value, onChange }: PaymentSelectorProps) => {
                 {options.map((opt) => (
                     <button
                         key={opt.id}
+                        type="button"
                         onClick={() => onChange(opt.id)}
                         className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all
               ${value === opt.id
