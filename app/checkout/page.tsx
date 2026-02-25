@@ -29,17 +29,20 @@ export default function CheckoutPage() {
     };
 
     useEffect(() => {
-        if (!loading && !isAuthenticated) {
+        if (loading) return;
+
+        if (!isAuthenticated) {
             router.push("/login");
         }
 
-        if (!loadingCart && totalItens <= 0) {
-            router.push("/");
+        if (!loadingCart) {
+            if (totalItens === 0)
+                router.push("/");
         }
 
         closeCart();
 
-    }, [loading, isAuthenticated, router]);
+    }, [loading, isAuthenticated, loadingCart, totalItens, router]);
 
     async function handleConfirmOrder() {
         setIsPending(true);
@@ -259,7 +262,7 @@ export default function CheckoutPage() {
                             </div>
 
                             <div className="mt-4 bg-gray-100 p-3 rounded-b-lg -mx-5 -mb-5 border-t border-gray-200">
-                                <button className="text-blue-600 hover:text-orange-600 hover:underline text-xs flex items-center">
+                                <button type='button' className="text-blue-600 hover:text-orange-600 hover:underline text-xs flex items-center">
                                     Como os custos de frete são calculados? <ChevronRight className="w-3 h-3" />
                                 </button>
                             </div>
