@@ -51,7 +51,7 @@ export default function CheckoutPage() {
 
         const orderData = {
             userId: user?.nameid,
-            orderProducts: cart.map(item => ({
+            orderItems: cart.map(item => ({
                 productId: item.id,
                 quantity: item.quantity
             })),
