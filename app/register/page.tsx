@@ -24,6 +24,13 @@ export default function MaterialRegister() {
     const parseApiError = (errorMessage: string): string => {
         try {
             const errorJson = JSON.parse(errorMessage);
+            console.log(errorJson);
+            if (errorJson.status == 409) {
+                if (errorJson.detail === "Username Already exists")
+                    return "Este Usuário já existe";
+                if (errorJson.detail === "Email Already Exists")
+                    return "Este Email já existe";
+            }
             if (Array.isArray(errorJson.errors)) {
                 return errorJson.errors.join("\n");
             }
@@ -189,7 +196,7 @@ export default function MaterialRegister() {
                 </form>
 
                 <div className="mt-8 flex flex-col items-center space-y-4">
-                    <button className="text-blue-600 text-sm font-medium hover:bg-blue-50 px-4 py-2 rounded-full transition-colors">
+                    <button onClick={() => { router.push("/login") }} className="text-blue-600 text-sm font-medium hover:bg-blue-50 px-4 py-2 rounded-full transition-colors">
                         Já tem uma conta? Entrar
                     </button>
                 </div>
