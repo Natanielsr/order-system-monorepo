@@ -8,15 +8,16 @@ import { Address } from '@/types/address';
 import AddressCard from '@/components/AddressCard';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/Spinner';
+import { PatternFormat } from 'react-number-format';
+import SimpleAlert from '@/components/SimpleAlert';
 
 export default function UserProfile() {
     const [isEditing, setIsEditing] = useState(false);
     const { user, getToken, loading, isAuthenticated } = useAuth();
     const [addresses, setAddresses] = useState<Address[]>([]);
     const router = useRouter();
-    const page = 1;
-    const pageSize = 5;
-
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
+    const [phoneOriginal, setPhoneOriginal] = useState("");
 
     const [userData, setUserData] = useState({
         name: "",
@@ -25,11 +26,46 @@ export default function UserProfile() {
         role: "",
     });
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSaveUser = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsEditing(false);
-        // Aqui você faria a chamada para sua API (ex: fetch('/api/user', { method: 'PUT' }))
-        console.log("Dados salvos:", userData);
+
+        try {
+            var token = getToken();
+
+            if (userData.phone.length < 11) {
+                console.log("phone digits: " + userData.phone.length);
+                setAlert({ show: true, message: "O telefone precisa ter 11 digitos", type: "error" })
+                setUserData({ ...userData, phone: phoneOriginal })
+                return;
+            }
+
+            var userBody = {
+                id: user?.nameid,
+                phone: userData.phone
+            };
+
+            // Ajuste a URL para o seu endpoint real
+            const response = await fetch(
+                `${API_CONFIG.BASE_URL}/user/${user?.nameid}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // Se necessário
+                    },
+                    body: JSON.stringify(userBody)
+                }
+            );
+            const data = await response.json();
+            setPhoneOriginal(data.phone);
+            console.log("Dados salvos:", userData);
+
+        } catch (error) {
+            console.error("Erro ao buscar endereços:", error);
+        } finally {
+            setIsEditing(false);
+        }
+
     };
 
     const fetchAddresses = async () => {
@@ -37,7 +73,7 @@ export default function UserProfile() {
             var token = getToken();
             // Ajuste a URL para o seu endpoint real
             const response = await fetch(
-                `${API_CONFIG.BASE_URL}/address/GetUserAddresses?userId=${user?.nameid}&page=${page}&pageSize=${pageSize}`,
+                `${API_CONFIG.BASE_URL}/address/GetUserAddresses?userId=${user?.nameid}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -68,6 +104,7 @@ export default function UserProfile() {
                 }
             );
             const data = await response.json();
+            const phoneFromApi = data.phone || "";
             console.log(data);
             setUserData(prev => ({
                 ...prev,
@@ -76,9 +113,12 @@ export default function UserProfile() {
                 role: data.role || "",
                 phone: data.phone
             }));
+            console.log(phoneFromApi);
+            setPhoneOriginal(phoneFromApi.toString());
+
 
         } catch (error) {
-            console.error("Erro ao buscar endereços:", error);
+            console.error("Erro ao buscar Usuario:", error);
         } finally {
         }
     };
@@ -94,6 +134,8 @@ export default function UserProfile() {
             fetchAddresses();
             fetchUser();
         }
+
+        console.log("po:" + phoneOriginal);
 
     }, [loading, user]);
 
@@ -135,7 +177,7 @@ export default function UserProfile() {
                 </div>
 
                 {/* Formulário / Dados */}
-                <form onSubmit={handleSave} className="p-8">
+                <form onSubmit={handleSaveUser} className="p-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         {/* Campo: Nome */}
@@ -170,11 +212,20 @@ export default function UserProfile() {
                             <label className="text-sm font-semibold text-gray-600 flex items-center gap-2">
                                 <Phone size={16} /> Telefone
                             </label>
-                            <input
+                            <PatternFormat
+                                id="phone"
+                                required
                                 disabled={!isEditing}
-                                className="w-full p-2.5 border rounded-lg bg-white disabled:bg-gray-50 disabled:text-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                format="(##) #####-####"
+                                mask="_"
                                 value={userData.phone}
-                                onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
+                                onValueChange={(values) => {
+                                    // .value retorna apenas os números (ex: 15997307629)
+                                    // .formattedValue retorna a string formatada
+                                    setUserData({ ...userData, phone: values.value });
+                                }}
+                                className="w-full p-2.5 border rounded-lg bg-white disabled:bg-gray-50 disabled:text-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                placeholder="(99) 99999-9999"
                             />
                         </div>
                     </div>
@@ -210,6 +261,12 @@ export default function UserProfile() {
                     </div>
                 </div>
             </div>
+            <SimpleAlert
+                isOpen={alert.show}
+                message={alert.message}
+                type={alert.type}
+                onClose={() => setAlert({ ...alert, show: false })}
+            />
         </div>
     );
 }
