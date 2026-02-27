@@ -164,7 +164,7 @@ export default function LoginPage() {
                 {/* Rodapé */}
                 <p className="text-center mt-8 text-sm text-gray-600">
                     Não tem uma conta?{' '}
-                    <a href="#" className="text-blue-600 hover:underline font-bold">Cadastre-se</a>
+                    <a href="/register" className="text-blue-600 hover:underline font-bold">Cadastre-se</a>
                 </p>
             </div>
             <SimpleAlert
