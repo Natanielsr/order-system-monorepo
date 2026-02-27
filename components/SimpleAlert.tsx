@@ -30,7 +30,7 @@ export default function SimpleAlert({ message, isOpen, onClose, type = 'success'
                 }`}>
                 {type === 'success' ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
 
-                <span className="text-sm font-semibold whitespace-nowrap">
+                <span className="text-sm font-semibold whitespace-pre-line">
                     {message}
                 </span>
 
