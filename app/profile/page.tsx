@@ -21,9 +21,8 @@ export default function UserProfile() {
     const [userData, setUserData] = useState({
         name: "",
         email: "",
-        phone: "(11) 98765-4321",
+        phone: "",
         role: "",
-        bio: "Desenvolvedor focado em soluções escaláveis e UX."
     });
 
     const handleSave = (e: React.FormEvent) => {
@@ -55,6 +54,35 @@ export default function UserProfile() {
         }
     };
 
+    const fetchUser = async () => {
+        try {
+            var token = getToken();
+            // Ajuste a URL para o seu endpoint real
+            const response = await fetch(
+                `${API_CONFIG.BASE_URL}/user/${user?.nameid}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // Se necessário
+                    },
+                }
+            );
+            const data = await response.json();
+            console.log(data);
+            setUserData(prev => ({
+                ...prev,
+                name: data.username,
+                email: data.email,
+                role: data.role || "",
+                phone: data.phone
+            }));
+
+        } catch (error) {
+            console.error("Erro ao buscar endereços:", error);
+        } finally {
+        }
+    };
+
     useEffect(() => {
         if (!isAuthenticated && !loading) {
             router.push("/login");
@@ -62,17 +90,11 @@ export default function UserProfile() {
             return;
         }
 
-        if (user) {
-            setUserData(prev => ({
-                ...prev,
-                name: user.unique_name || "",
-                email: user.email || "",
-                role: user.role || ""
-            }));
+        if (loading == false) {
+            fetchAddresses();
+            fetchUser();
         }
 
-        if (loading == false)
-            fetchAddresses();
     }, [loading, user]);
 
     const handleDeleteAddress = () => {
@@ -122,7 +144,7 @@ export default function UserProfile() {
                                 <User size={16} /> Nome Completo
                             </label>
                             <input
-                                disabled={!isEditing}
+                                disabled={true}
                                 className="w-full p-2.5 border rounded-lg bg-white disabled:bg-gray-50 disabled:text-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                                 value={userData.name}
                                 onChange={(e) => setUserData({ ...userData, name: e.target.value })}
@@ -135,7 +157,7 @@ export default function UserProfile() {
                                 <Mail size={16} /> E-mail
                             </label>
                             <input
-                                disabled={!isEditing}
+                                disabled={true}
                                 type="email"
                                 className="w-full p-2.5 border rounded-lg bg-white disabled:bg-gray-50 disabled:text-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                                 value={userData.email}
