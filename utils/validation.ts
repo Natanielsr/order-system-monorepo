@@ -31,3 +31,35 @@ export const validateCpf = (cpf: string): boolean => {
 
     return true;
 };
+
+/**
+ * Valida se a senha atende aos requisitos:
+ * - Pelo menos 8 caracteres
+ * - Pelo menos uma letra maiúscula
+ * - Pelo menos um caractere especial (!?*.@#$%^-)
+ */
+export function validatePassword(password: string, confirmPassword: string): { isValid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    if (password.length < 8) {
+        errors.push("A senha deve ter no mínimo 8 caracteres.");
+    }
+
+    if (!/[A-Z]/.test(password)) {
+        errors.push("A senha deve conter pelo menos uma letra maiúscula.");
+    }
+
+    // Regex para os caracteres especiais específicos da sua Exception
+    if (!/[!?*.@#$%^-]/.test(password)) {
+        errors.push("A senha deve conter pelo menos um caractere especial (!?*.@#$%^-).");
+    }
+
+    if (password != confirmPassword) {
+        errors.push("A senha e a confirmação de senha devem ser iguais.");
+    }
+
+    return {
+        isValid: errors.length === 0,
+        errors,
+    };
+}
