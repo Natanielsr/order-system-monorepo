@@ -1,0 +1,66 @@
+# ==========================================
+# GERAL & MONOREPO
+# ==========================================
+.DS_Store
+.vscode/
+.idea/
+*.log
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+dist/
+build/
+
+# ==========================================
+# BACKEND (ASP.NET Core / .NET 10)
+# ==========================================
+**/bin/
+**/obj/
+**/appsettings.Development.json
+**/appsettings.Local.json
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Publish output
+**/publish/
+
+# Entity Framework & Database
+*.db
+*.sqlite
+**/Migrations/*.Designer.cs
+
+# .NET Core specific
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ==========================================
+# FRONTEND (Next.js / Node.js)
+# ==========================================
+**/node_modules/
+**/.next/
+**/out/
+
+# TypeScript
+**/tsconfig.tsbuildinfo
+
+# Testing
+**/coverage/
+**/.nyc_output/
+
+# Production
+**/build/
+
+# ==========================================
+# DOCKER & TOOLS
+# ==========================================
+.docker/
+**/docker-compose.override.yml
+.turbo/
