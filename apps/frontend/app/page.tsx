@@ -33,8 +33,6 @@ async function getProducts(): Promise<Product[]> {
 export default async function Home() {
 
   const products = await getProducts();
-  console.log(products);
-  // const { cart, addToCart, removeFromCart, total } = useCart();
 
   return (
     <main className="pt-10">
