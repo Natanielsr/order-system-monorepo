@@ -83,7 +83,7 @@ public class GetProductByIdHandlerTest
         // Arrange
         var nonExistingId = Guid.NewGuid();
         _mockProductRepository.Setup(p => p.GetByIdAsync(nonExistingId))
-            .ReturnsAsync((Product?)null);
+            .ReturnsAsync((Product)null);
 
         var query = new GetProductByIdQuery(nonExistingId);
 
