@@ -1,3 +1,7 @@
+
+
+#nullable disable
+
 using AutoMapper;
 using Moq;
 using OrderSystem.Application.DTOs.User;
@@ -44,7 +48,7 @@ public class AuthHandlerTest
         _mockUserRepository.Setup(u => u.GetByUserNameAsync("testuser"))
             .ReturnsAsync(_testUser);
         _mockUserRepository.Setup(u => u.GetByUserNameAsync("wronguser"))
-            .ReturnsAsync((User?)null);
+            .ReturnsAsync((User)null!);
 
         // Setup do password service
         _mockPasswordService.Setup(p => p.VerifyPassowrd("correctpass", "hashedpassword123"))
