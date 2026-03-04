@@ -43,6 +43,17 @@ public bool ValidateUser(string username) { ... }
 - Tipos comuns: `feat`, `fix`, `test`, `chore`, `docs`, `refactor`
 - Exemplo: `feat: add user authentication handler`
 
+### Permissão para Execução de Comandos e Alterações
+
+- **Antes de executar qualquer comando** (`dotnet`, `git`, terminal, etc.) ou **realizar alterações no código**, **peça permissão explícita** ao responsável pelo projeto.
+- Esta regra aplica-se a:
+  - Criar, modificar ou excluir arquivos
+  - Executar migrações de banco de dados
+  - Rodar testes ou coletar cobertura
+  - Fazer commits, pushes, ou alterações no repositório
+- **Exceções**: Comandos de leitura (ex: `git status`, `cat`, `ls`) não precisam de permissão
+- **Motivo**: Garantir integridade do código, evitar conflitos e manter qualidade do projeto
+
 ---
 
 ## Convenções de Código
@@ -210,18 +221,18 @@ Sempre lançar exceções específicas, não genéricas.
 ### ✅ Completos (100% coverage target)
 
 - **Auth:** `AuthHandler`, `AuthEmailHandler`
-- **Users:** `CreateUserHandler`, `CreateUserValidator`
+- **Users:** `CreateUserHandler`, `GetUserByIdHandler`, `UpdateUserHandler`, `CreateUserValidator`
 - **Products:** `CreateProductHandler`, `GetAllProductsHandler`, `GetProductByIdHandler`, `CreateProductValidator`, `ImageValidator`
+- **Addresses:** `CreateAddressHandler`, `GetUserAddressesHandler`, `GetAddressByIdHandler`, `UpdateAddressHandler`, `DisableAddressHandler`, `DeleteAddressHandler` **(falta apenas: `CreateAddressValidator`)**
+- **Orders:** `CreateOrderHandler`, `GetOrderByIdHandler`, `ListOrdersHandler`, `ListUserOrdersHandler`, `CreateOrderValidator`
 
 ### 🔄 Parciais
 
-- **Addresses:** `CreateAddressHandler` ✅, faltam: `GetUserAddressesHandler`, `GetAddressByIdHandler`, `UpdateAddressHandler`, `Delete/DisableAddressHandler`, `CreateAddressValidator`
+- **AddressValidator:** `CreateAddressValidator` (validator em falta para Addresses)
 
 ### ⏳ Não iniciados
 
-- **Orders Queries:** `GetOrderByIdHandler`, `ListOrdersHandler`, `ListUserOrdersHandler`
-- **Users:** `GetUserByIdHandler`, `UpdateUserHandler`
-- **Validators:** `CreateOrderValidator`, `CreateAddressValidator`
+Nenhum módulo pendente. Todos os handlers e validators principais estão implementados.
 
 ---
 
@@ -246,5 +257,5 @@ Sempre lançar exceções específicas, não genéricas.
 
 ---
 
-**Última atualização:** 2025-03-04  
-**Versão:** 1.0
+**Última atualização:** 2025-06-18  
+**Versão:** 1.2
