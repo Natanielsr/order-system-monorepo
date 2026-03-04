@@ -24,6 +24,7 @@ public class User : Entity
     public User() { }
 
     public static User CreateUser(
+        Guid id,
         string username,
         string email,
         string hashedPassword,
@@ -33,7 +34,7 @@ public class User : Entity
     {
         return new User()
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             CreationDate = DateTimeOffset.UtcNow,
             UpdateDate = DateTimeOffset.UtcNow,
             Active = true,

@@ -48,7 +48,7 @@ public class CreateOrderHandlerTest
     {
         mockUserRepository = new Mock<IUserRepository>();
 
-        user = User.CreateUser("UserTest", "usertest@email.com", "password", "role", "telephone");
+        user = User.CreateUser(Guid.NewGuid(), "UserTest", "usertest@email.com", "password", "role", "telephone");
 
         mockUserRepository.Setup(ur => ur.GetByIdAsync(userId)).ReturnsAsync(user);
 
