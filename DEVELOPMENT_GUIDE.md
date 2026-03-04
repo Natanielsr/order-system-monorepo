@@ -135,7 +135,7 @@ public async Task Handle_ValidRequest_ReturnsExpectedResult()
 ### Nullable Context
 
 - Use `#nullable disable` no início dos arquivos de teste para evitar warnings
-- Para valores anuláveis, use `(User?)null` ou `(User)null!` conforme necessário
+- Para valores anuláveis, use `(User)null` (cast simples) conforme necessário
 
 ---
 
