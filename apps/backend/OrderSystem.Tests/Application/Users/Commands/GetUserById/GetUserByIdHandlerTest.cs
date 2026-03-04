@@ -76,7 +76,7 @@ public class GetUserByIdHandlerTest
         // Arrange
         var userId = Guid.NewGuid();
         _userRepositoryMock.Setup(repo => repo.GetByIdAsync(userId))
-            .ReturnsAsync((User)null);
+            .ReturnsAsync((User)null!);
 
         var command = new GetUserByIdCommand(userId);
 
