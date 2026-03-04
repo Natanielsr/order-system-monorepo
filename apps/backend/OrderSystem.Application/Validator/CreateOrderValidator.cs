@@ -16,15 +16,20 @@ public class CreateOrderValidator : AbstractValidator<CreateOrderCommand>
             .Must(HasNoDuplicates)
             .WithMessage("the list contains duplicate product IDs.");
 
-        RuleForEach(o => o.OrderItems)
-            .Must(p => p.Quantity > 0).WithMessage("Product quantity must be bigger then zero");
+        RuleForEach(o => o.OrderItems).ChildRules(item =>
+        {
+            item.RuleFor(x => x.Quantity)
+                .GreaterThan(0)
+                .WithMessage("Product quantity must be bigger then zero");
 
-        RuleForEach(o => o.OrderItems)
-            .Must(oi => oi.ProductId != Guid.Empty).WithMessage("ProductId can´t be empty");
+            item.RuleFor(x => x.ProductId)
+                .NotEmpty().WithMessage("ProductId can´t be empty");
+        });
     }
 
     private bool HasNoDuplicates(List<CreateOrderItemDto> list)
     {
+        if (list == null) return true; // NotNull rule handles null case
         // Compara o total de itens com o total de IDs únicos
         return list.Select(x => x.ProductId).Distinct().Count() == list.Count;
     }
