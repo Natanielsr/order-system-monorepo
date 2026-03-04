@@ -189,7 +189,7 @@ cd apps/backend
 docker-compose up -d
 ```
 
-A API estará disponível em: `http://localhost:5000/api`
+A API estará disponível em: `http://localhost:5012/api`
 
 #### Execução Local
 ```bash
