@@ -35,7 +35,7 @@ public class CreateAddressValidator : AbstractValidator<CreateAddressCommand>
 
         RuleFor(x => x.ZipCode)
             .NotEmpty().WithMessage("O CEP é obrigatório.")
-            .Matches(@"^\d{5}-\d{3}$|^\d{8}$").WithMessage("CEP em formato inválido (ex: 00000-000).");
+            .Matches(@"^\d{5}-\d{3}$|^\d{8}$").WithMessage("CEP em formato inválido (use 00000-000 ou 00000000).");
 
         RuleFor(x => x.UserId)
             .NotEmpty().WithMessage("O ID do usuário é obrigatório.")
