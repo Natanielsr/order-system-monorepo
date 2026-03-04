@@ -22,7 +22,7 @@ public class Address : Entity
     public required bool IsDefault { get; set; }
 
     // Construtor vazio (importante para serialização/EF)
-    protected Address() { }
+    public Address() { }
 
     // Método útil para exibir o endereço formatado
     public override string ToString()
