@@ -308,6 +308,7 @@ _pkginfo.txt
 ############################
 **/TestCoverageReport/
 **/coverage.cobertura.xml
+/CoverageHistory/
 
 ############################
 # Banco local / arquivos gerados
