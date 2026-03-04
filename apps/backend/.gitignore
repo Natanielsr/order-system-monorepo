@@ -304,6 +304,12 @@ _pkginfo.txt
 **/*.cache
 
 ############################
+# Relatórios de cobertura de testes
+############################
+**/TestCoverageReport/
+**/coverage.cobertura.xml
+
+############################
 # Banco local / arquivos gerados
 ############################
 **/*.db
