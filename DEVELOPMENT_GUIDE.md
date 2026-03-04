@@ -248,6 +248,28 @@ Nenhum módulo pendente. Todos os handlers e validators principais estão implem
 
 ---
 
+## Cobertura de Testes (Code Coverage)
+
+### Geração de Relatório
+
+- Comando para coletar cobertura:
+  ```bash
+  dotnet test ./apps/backend/ --collect:"XPlat Code Coverage"
+  ```
+- Relatório HTML é gerado automaticamente pelo ReportGenerator em:
+  ```
+  apps/backend/OrderSystem.Tests/CoverageReport/index.html
+  ```
+- **Sempre** gerar e revisar cobertura antes de commits importantes
+
+### .gitignore
+
+- A pasta `CoverageReport/` deve estar no `.gitignore` (não commitada)
+- Arquivos de cobertura brutos (`*.cobertura.xml`) também devem ser ignorados
+- Manter apenas relatórios locais; usar CI/CD para cobertura oficial
+
+---
+
 ## Como UsarEsteGuia
 
 1. Leia este arquivo antes de iniciar qualquer desenvolvimento

@@ -31,6 +31,10 @@ build/
 # Publish output
 **/publish/
 
+# Test Coverage Reports
+**/CoverageReport/
+**/*.cobertura.xml
+
 # Entity Framework & Database
 *.db
 *.sqlite
