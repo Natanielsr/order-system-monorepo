@@ -208,6 +208,20 @@ npm run dev
 
 A aplicação estará disponível em: `http://localhost:3000`
 
+### 4. Desenvolvimento Simultâneo (Backend + Frontend)
+
+Para rodar ambos os serviços simultaneamente em modo de desenvolvimento, execute na raiz do projeto:
+
+```bash
+npm run dev
+```
+
+Este comando utiliza o `concurrently` para iniciar:
+- Backend (ASP.NET Core) na porta **5012**
+- Frontend (Next.js) na porta **3000**
+
+Ambos os serviços terão hot-reload habilitado para uma melhor experiência de desenvolvimento.
+
 ---
 
 ## 🔧 Configuração do Banco de Dados
