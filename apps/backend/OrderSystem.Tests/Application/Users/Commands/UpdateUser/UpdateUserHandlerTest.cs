@@ -104,7 +104,7 @@ public class UpdateUserHandlerTest
         );
 
         _userRepositoryMock.Setup(repo => repo.GetByIdAsync(_userId))
-            .ReturnsAsync((User)null);
+            .ReturnsAsync((User)null!);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -200,7 +200,7 @@ public class UpdateUserHandlerTest
             Phone: "3333333333"
         );
 
-        User capturedUser = null;
+        User capturedUser = null!;
 
         _userRepositoryMock.Setup(repo => repo.GetByIdAsync(_userId))
             .ReturnsAsync(existingUser);
