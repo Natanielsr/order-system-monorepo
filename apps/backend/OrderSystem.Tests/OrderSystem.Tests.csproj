@@ -34,4 +34,8 @@
     <Folder Include="Domain/Entities/" />
   </ItemGroup>
 
+  <Target Name="GenerateHtmlCoverageReport" AfterTargets="VSTest">
+    <Exec Command="reportgenerator -reports:'$(ProjectDir)TestResults/*/coverage.cobertura.xml' -targetdir:'$(ProjectDir)TestResults/CoverageReport' -reporttypes:Html" />
+  </Target>
+
 </Project>
