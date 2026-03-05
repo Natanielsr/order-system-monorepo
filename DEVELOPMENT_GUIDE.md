@@ -104,6 +104,8 @@ OrderSystem.Application/
 
 ## Padrões de Testes
 
+- **Exceção**: Não é necessário criar testes para arquivos na pasta `apps/backend/OrderSystem.Infrastructure/Migrations`.
+
 ### Nomenclatura de Testes
 
 - **Classe de teste:** `[Handler/Validator]Test.cs`
