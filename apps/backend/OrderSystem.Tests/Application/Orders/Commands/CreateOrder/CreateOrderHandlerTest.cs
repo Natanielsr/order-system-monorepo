@@ -265,7 +265,7 @@ public class CreateOrderHandlerTest
     {
         //Arrange
         var product = TestProducts.ElementAt(0);
-        var productId = TestProducts.ElementAt(0).Id;
+        var productId = product.Id;
         List<CreateOrderItemDto> createOrderProductDtos = new List<CreateOrderItemDto>()
         {
             new() { ProductId = productId, Quantity = 1 }
