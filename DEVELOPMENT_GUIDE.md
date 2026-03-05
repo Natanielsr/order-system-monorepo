@@ -223,12 +223,13 @@ Sempre lançar exceções específicas, não genéricas.
 - **Auth:** `AuthHandler`, `AuthEmailHandler`
 - **Users:** `CreateUserHandler`, `GetUserByIdHandler`, `UpdateUserHandler`, `CreateUserValidator`
 - **Products:** `CreateProductHandler`, `GetAllProductsHandler`, `GetProductByIdHandler`, `CreateProductValidator`, `ImageValidator`
-- **Addresses:** `CreateAddressHandler`, `GetUserAddressesHandler`, `GetAddressByIdHandler`, `UpdateAddressHandler`, `DisableAddressHandler`, `DeleteAddressHandler` **(falta apenas: `CreateAddressValidator`)**
+- **Addresses:** `CreateAddressHandler`, `GetUserAddressesHandler`, `GetAddressByIdHandler`, `UpdateAddressHandler`, `DisableAddressHandler`, `DeleteAddressHandler`, `CreateAddressValidator` ✅
 - **Orders:** `CreateOrderHandler`, `GetOrderByIdHandler`, `ListOrdersHandler`, `ListUserOrdersHandler`, `CreateOrderValidator`
+- **DTOs (Order):** `OrderItemDto` ✅
 
 ### 🔄 Parciais
 
-- **AddressValidator:** `CreateAddressValidator` (validator em falta para Addresses)
+- **DTOs (Order):** `OrderDto`, `PaymentInfoDto`, `CreateOrderProductDto`, `CreateOrderResponseDto`, `CreateOrderProductResponseDto` (testes em andamento)
 
 ### ⏳ Não iniciados
 
