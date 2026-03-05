@@ -263,9 +263,10 @@ public class CreateOrderHandlerTest
     [Fact]
     public async Task ReduceStockProductsInOrderTest()
     {
-        //Arrange
+        // Arrange
         var product = TestProducts.ElementAt(0);
         var productId = product.Id;
+        int initialQuantity = product.AvailableQuantity; // Capture initial quantity
         List<CreateOrderItemDto> createOrderProductDtos = new List<CreateOrderItemDto>()
         {
             new() { ProductId = productId, Quantity = 1 }
@@ -273,16 +274,21 @@ public class CreateOrderHandlerTest
 
         CreateOrderCommand command = new(createOrderProductDtos, userId, PaymentMethod.Pix, Guid.Empty);
 
-        //Act
+        // Act
         var response = await createOrderHandler.Handle(command, cancellationToken);
 
-        //Assert
-        Assert.Equal(0, product.AvailableQuantity);
-
-        // BÔNUS: Verificar se o método foi chamado exatamente uma vez
+        // Assert - Verify UpdateAsync was called with correct product state
         mockOrderUnitOfWork.Verify(m => m.productRepository.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
         mockOrderUnitOfWork.Verify(m => m.orderRepository.AddAsync(It.IsAny<Order>()), Times.Once);
-        mockOrderUnitOfWork.Verify(m => m.productRepository.UpdateAsync(productId, product), Times.Once);
+
+        // Capture the product object passed to UpdateAsync and verify its state
+        mockOrderUnitOfWork.Verify(m => m.productRepository.UpdateAsync(
+            productId,
+            It.Is<Product>(p => p.AvailableQuantity == initialQuantity - 1 && p.Id == productId)
+        ), Times.Once);
+
+        // Also verify the in-memory product object was modified (for additional safety)
+        Assert.Equal(initialQuantity - 1, product.AvailableQuantity);
     }
 
 }
